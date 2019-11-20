@@ -1,10 +1,10 @@
 import requests
 import json
 
-
+ # url of the API
 fmp_URL = 'https://financialmodelingprep.com/api/v3/company/profile/%s'
 
-def get_price(company="AAPL"):
+def get_price(company):
     """Return price and name of company the label is referring to.
     
     Given the label of a company in the stock market, the function makes a 
