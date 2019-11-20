@@ -1,9 +1,6 @@
 import os
 
-def get_adjusted_price(price, currency):
-    default_datafile = '../data/allowed_currencies.csv'
-    
-    if currency == "euro":
-        return price * 0.9, '€'
-    else:
-        return price * 0.77, '£'
+def get_adjusted_price(price, currency, currency_data):
+    price = price * currency_data.at[currency,'curr_to_dollar'] 
+    symbol = currency_data.at[currency, 'symbol']
+    return price, symbol

@@ -1,37 +1,40 @@
 import argparse
 import pandas as pd
 from python_package import stock
-from python_package import currency_handler
+from python_package import currency_handler as ch
 
 
 default_datafile = 'data/allowed_currencies.csv'
 
-def read_currency_data(datafile = default_datafile):
-    df = pd.read_csv(default_datafile, sep=";")
-    df.columns = ['currency','curr/dollar','symbol']
+def read_currency_data(path):
+    df = pd.read_csv(path, sep=";")
+    df.columns = ['currency','curr_to_dollar','symbol']
+    df.set_index('currency', inplace = True)
     return df
 
 
-def parse_arguments():
+def parse_arguments(c):
     parser = argparse.ArgumentParser()
     parser.add_argument("symbol", 
                         help = "The symbol associated with a company")
     parser.add_argument("-c", default = 'dollar', required = True, 
                         help = "The currency related to the stock value",
-                        choices = read_currency_data()['currency'].tolist())
+                        choices = c)
     parser.add_argument("-v", help = "Be more verbose", action="store_true")
     args = parser.parse_args()
     return args
 
 
 if __name__ == "__main__":
-    args = parse_arguments()
-    currency = args.c
+    currency_data = read_currency_data(path = default_datafile)
+    currencies_allowed = currency_data.index.tolist()
+    args = parse_arguments(currencies_allowed)
+    curr_chosen = args.c
     price, name = stock.get_price(args.symbol, args.v)
-    price, currency_symbol = currency_handler.get_adjusted_price(price, currency)
+    price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
     print('Company "{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
                                                                args.symbol,
                                                                price,
-                                                               currency))
+                                                               c_symbol))
                                                             
 
