@@ -14,13 +14,15 @@ def read_currency_data(path):
 
 
 def parse_arguments(c):
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description = "Process ticker symbol and currency",
+                                     prog = "stock_info",
+                                     usage = "%(prog)s [options]")
+    parser.add_argument("-v", help = "Be more verbose", action="store_true")
     parser.add_argument("symbol", 
                         help = "The ticker (or stock) symbol associated with stocks of a company")
     parser.add_argument("-c", default = 'dollar', required = True, 
                         help = "The currency in which the value is expressed",
                         choices = c)
-    parser.add_argument("-v", help = "Be more verbose", action="store_true")
     args = parser.parse_args()
     return args
 
