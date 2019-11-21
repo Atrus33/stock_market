@@ -16,9 +16,9 @@ def read_currency_data(path):
 def parse_arguments(c):
     parser = argparse.ArgumentParser()
     parser.add_argument("symbol", 
-                        help = "The symbol associated with a company")
+                        help = "The ticker (or stock) symbol associated with stocks of a company")
     parser.add_argument("-c", default = 'dollar', required = True, 
-                        help = "The currency related to the stock value",
+                        help = "The currency in which the value is expressed",
                         choices = c)
     parser.add_argument("-v", help = "Be more verbose", action="store_true")
     args = parser.parse_args()
