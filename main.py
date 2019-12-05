@@ -5,6 +5,8 @@ from python_package import currency_handler as ch
 
 
 default_datafile = 'data/allowed_currencies.csv'
+conn = None
+cursor = None
 
 def read_currency_data(path):
     df = pd.read_csv(path, sep=";")
