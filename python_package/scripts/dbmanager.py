@@ -26,6 +26,6 @@ def check_for_username(conn, cursor, username, password):
     password = str(results[0][2]) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
     if digest == results[0][1].lower():
-        print("Correct username")
+        return True
     else:
-        print("User is not present, or password is invalid!")
+        return False

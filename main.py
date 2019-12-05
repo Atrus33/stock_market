@@ -57,14 +57,16 @@ if __name__ == "__main__":
     open_and_create()
     currency_data = read_currency_data(path = default_datafile)
     currencies_allowed = currency_data.index.tolist()
+    curr_chosen = args.c
     args = parse_arguments(currencies_allowed)
-    dbmanager.check_for_username(conn, cursor, args.a, args.p)
-    #curr_chosen = args.c
-    #price, name = stock.get_price(args.symbol, args.v)
-    #price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
-    #print('Company "{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
-     #                                                          args.symbol,
-      #                                                         price,
-       #                                                        c_symbol))
+    if dbmanager.check_for_username(conn, cursor, args.a, args.p):
+        price, name = stock.get_price(args.symbol, args.v)
+        price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
+        print('Company "{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
+                                                               args.symbol,
+                                                               price,
+                                                               c_symbol))
+    else:
+        print("Username does not exist or password is incorrect!")
                                                             
 
