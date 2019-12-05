@@ -1,13 +1,28 @@
 import argparse
 import pandas as pd
+import sqlite3
 from python_package import stock
 from python_package import currency_handler as ch
-
+from python_package.scripts import dbmanager
 
 default_datafile = 'data/allowed_currencies.csv'
+default_database = 'data/database.db'
+
 conn = None
 cursor = None
 
+def open_and_create():
+    global conn
+    global cursor
+    conn = sqlite3.connect(default_database)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT * FROM users")  
+    except sqlite3.OperationalError:
+        create_users_table()
+   
+        
+    
 def read_currency_data(path):
     df = pd.read_csv(path, sep=";")
     df.columns = ['currency','curr_to_dollar','symbol']
@@ -32,15 +47,16 @@ def parse_arguments(c):
 
 
 if __name__ == "__main__":
-    currency_data = read_currency_data(path = default_datafile)
-    currencies_allowed = currency_data.index.tolist()
-    args = parse_arguments(currencies_allowed)
-    curr_chosen = args.c
-    price, name = stock.get_price(args.symbol, args.v)
-    price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
-    print('Company "{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
-                                                               args.symbol,
-                                                               price,
-                                                               c_symbol))
+    open_and_create()
+    #currency_data = read_currency_data(path = default_datafile)
+    #currencies_allowed = currency_data.index.tolist()
+    #args = parse_arguments(currencies_allowed)
+    #curr_chosen = args.c
+    #price, name = stock.get_price(args.symbol, args.v)
+    #price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
+    #print('Company "{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
+     #                                                          args.symbol,
+      #                                                         price,
+       #                                                        c_symbol))
                                                             
 
