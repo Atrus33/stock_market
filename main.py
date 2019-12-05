@@ -19,7 +19,7 @@ def open_and_create():
     try:
         cursor.execute("SELECT * FROM users")  
     except sqlite3.OperationalError:
-        create_users_table()
+        dbmanager.create_users_table(conn, cursor)
    
         
     
@@ -38,9 +38,16 @@ def parse_arguments(c):
     parser.add_argument("-v", help = "Be more verbose", action="store_true")
     parser.add_argument("symbol", 
                         help = "The ticker (or stock) symbol associated with stocks of a company")
-    parser.add_argument("-c", default = 'dollar', required = True, 
+    parser.add_argument("-c", default = 'dollar', required = False, 
                         help = "The currency in which the value is expressed",
                         choices = c)
+    
+    # check username and password
+    parser.add_argument('-a', help="add a usernamename (requires -p)",
+                        required = True)
+    parser.add_argument('-p', help="the username password",
+                        required = True)
+    
     parser.add_argument("--version", action = "version", version = "%(prog)s 1.0")
     args = parser.parse_args()
     return args
@@ -48,9 +55,10 @@ def parse_arguments(c):
 
 if __name__ == "__main__":
     open_and_create()
-    #currency_data = read_currency_data(path = default_datafile)
-    #currencies_allowed = currency_data.index.tolist()
-    #args = parse_arguments(currencies_allowed)
+    currency_data = read_currency_data(path = default_datafile)
+    currencies_allowed = currency_data.index.tolist()
+    args = parse_arguments(currencies_allowed)
+    dbmanager.check_for_username(conn, cursor, args.a, args.p)
     #curr_chosen = args.c
     #price, name = stock.get_price(args.symbol, args.v)
     #price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
