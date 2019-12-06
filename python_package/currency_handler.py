@@ -1,6 +1,5 @@
-import os
 
-def get_adjusted_price(price, currency, currency_data):
-    price = price * currency_data.at[currency,'curr_to_dollar'] 
-    symbol = currency_data.at[currency, 'symbol']
-    return price, symbol
+def get_adjusted_price(price_value, currency_name, currency_data):
+    price_value = price_value * currency_data.at[currency_name,'curr_to_dollar'] 
+    symbol = currency_data.at[currency_name, 'symbol']
+    return price_value, symbol

@@ -6,7 +6,7 @@ from python_package import currency_handler as ch
 from python_package.scripts import dbmanager
 
 default_datafile = 'data/allowed_currencies.csv'
-default_database = 'data/database.db'
+default_database_path = 'data/database.db'
 
 conn = None
 cursor = None
@@ -14,7 +14,7 @@ cursor = None
 def open_and_create():
     global conn
     global cursor
-    conn = sqlite3.connect(default_database)
+    conn = sqlite3.connect(default_database_path)
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT * FROM users")  
@@ -23,14 +23,14 @@ def open_and_create():
    
         
     
-def read_currency_data(path):
-    df = pd.read_csv(path, sep = ";")
-    df.columns = ['currency','curr_to_dollar','symbol']
-    df.set_index('currency', inplace = True)
-    return df
+def read_currency_data(csv_path):
+    df_valid_currencies = pd.read_csv(csv_path, sep = ";")
+    df_valid_currencies.columns = ['currency','curr_to_dollar','symbol']
+    df_valid_currencies.set_index('currency', inplace = True)
+    return df_valid_currencies
 
 
-def parse_arguments(c):
+def parse_arguments(currency_name_list):
     parser = argparse.ArgumentParser(
              description = "Process ticker symbol and currency",
              prog = "stock_info",
@@ -41,7 +41,7 @@ def parse_arguments(c):
                         help = "Ticker symbol related to company's stocks")
     parser.add_argument("-c", default = 'dollar', required = False, 
                         help = "The currency in which the value is expressed",
-                        choices = c)
+                        choices = currency_name_list)
     
     # check username and password
     parser.add_argument('-a', help = "add a usernamename (requires -p)",
