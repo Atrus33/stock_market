@@ -1,8 +1,10 @@
 import sqlite3
 import random
 import hashlib
+
+
 def create_users_table(conn, cursor):
-    # Create table
+    # Create table based on the agreed schema
     cursor.execute('''CREATE TABLE users
                    (username VARCHAR(255) NOT NULL,
                     password VARCHAR(255) NOT NULL,
@@ -17,14 +19,15 @@ def save_new_username(username, password):
                    (username, digest, salt))
     conn.commit()
     
-
 def check_for_username(conn, cursor, username, password):
     rows = cursor.execute("SELECT * FROM users WHERE username=?",
                           (username,))
     conn.commit()
     results = rows.fetchall()
+     # get the digest in the database (third element) and concateate 
     password = str(results[0][2]) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
+     # if the two digests are equal, the user indicated a valid password
     if digest == results[0][1].lower():
         return True
     else:
