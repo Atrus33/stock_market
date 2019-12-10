@@ -1,3 +1,7 @@
 ﻿currency;curr_to_dollar;symbol
 euro;0.9;€
 gbp;0.77;£
+dollar;1;$
+bitcoin;0.00014;BTC
+aud;1.47;A$
+rupee;70.8;₹
