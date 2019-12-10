@@ -20,6 +20,10 @@ class TestMain(unittest.TestCase):
     def test_empty_datafie(self):
         df = read_currency_data(path=self.temporary_file)
         self.assertFalse(df)
+        
+    def test_file_no_csv(self):
+        df = read_currency_data(path=self.temporary_file)
+        self.assertFalse(df)
 
     def tearDown(self):
         os.remove(self.temporary_file)
