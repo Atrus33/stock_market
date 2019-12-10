@@ -49,13 +49,15 @@ def read_currency_data(path):
 
 
 def parse_arguments(c):
-    parser = argparse.ArgumentParser(description = "Process ticker symbol and currency",
-                                     prog = "stock_info",
-                                     usage = "%(prog)s [options]",
-                                     epilog = "Using financialmodelingprep API")
+    parser = argparse.ArgumentParser(
+            description = "Process ticker symbol and currency",
+            prog = "stock_info",
+            usage = "%(prog)s [options]",
+            epilog = "Using financialmodelingprep API")
     parser.add_argument("-v", help = "Be more verbose", action="store_true")
     parser.add_argument("symbol", 
-                        help = "The ticker (or stock) symbol associated with stocks of a company")
+                        help ='''The ticker (or stock) symbol
+                        associated with stocks of a company''')
     parser.add_argument("-c", default = 'dollar', required = True, 
                         help = "The currency in which the value is expressed",
                         choices = c)
@@ -66,7 +68,9 @@ def parse_arguments(c):
     parser.add_argument('-p', help="the username password",
                         required = True)
     
-    parser.add_argument("--version", action = "version", version = "%(prog)s 1.0")
+    parser.add_argument("--version",
+                        action = "version",
+                        version = "%(prog)s 1.0")
     args = parser.parse_args()
     return args
 
@@ -79,8 +83,10 @@ if __name__ == "__main__":
     args = parse_arguments(currencies_allowed)
     if dbmanager.check_for_username(conn, cursor, args.a, args.p):
         price, name = stock.get_price(args.symbol, args.v)
-        price, c_symbol = ch.get_adjusted_price(price, curr_chosen, currency_data)
-        print('Company "{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
+        price, c_symbol = ch.get_adjusted_price(price,
+                                                curr_chosen,
+                                                currency_data)
+        print('"{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
                                                                args.symbol,
                                                                price,
                                                                c_symbol))
