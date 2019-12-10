@@ -36,9 +36,15 @@ def read_currency_data(path):
     :return: the Dataframe containing infos about the currencies
     :rtype: Pandas.Dataframe
     """
-    df = pd.read_csv(path, sep=";")
-    df.columns = ['currency','curr_to_dollar','symbol']
-    df.set_index('currency', inplace = True)
+    df = pd.DataFrame()
+    try:
+        df = pd.read_csv(path, sep=";")
+        df.columns = ['currency','curr_to_dollar','symbol']
+        df.set_index('currency', inplace = True)
+    except:
+        return False
+    if len(df) == 0:
+        return False
     return df
 
 
