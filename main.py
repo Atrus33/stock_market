@@ -36,14 +36,14 @@ def read_currency_data(path):
     :return: the Dataframe containing infos about the currencies
     :rtype: Pandas.Dataframe
     """
-    if path.split('.')[-1] != '.csv':
+    if path.split('.')[-1] != 'csv':
         return False
     df = pd.DataFrame()
     try:
         df = pd.read_csv(path, sep=";")
         df.columns = ['currency','curr_to_dollar','symbol']
         df.set_index('currency', inplace = True)
-    except:
+    except :
         return False
     return df
 
@@ -79,14 +79,14 @@ if __name__ == "__main__":
     open_and_create()
     currency_data = read_currency_data(path = default_datafile)
     currencies_allowed = currency_data.index.tolist()
-    curr_chosen = args.c
     args = parse_arguments(currencies_allowed)
+    curr_chosen = args.c
     if dbmanager.check_for_username(conn, cursor, args.a, args.p):
         price, name = stock.get_price(args.symbol, args.v)
         price, c_symbol = ch.get_adjusted_price(price,
                                                 curr_chosen,
                                                 currency_data)
-        print('"{}" (Symbol: {}) has a stock value of {} {}.'.format(name,
+        print('{} (Symbol: {}) has a stock value of {} {}.'.format(name,
                                                                args.symbol,
                                                                price,
                                                                c_symbol))
