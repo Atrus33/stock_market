@@ -12,6 +12,11 @@ conn = None
 cursor = None
 
 def open_and_create():
+    """Connect to the database
+    
+    :return: no value
+    :rtype: none
+    """
     global conn
     global cursor
     conn = sqlite3.connect(default_database)
@@ -24,6 +29,13 @@ def open_and_create():
         
     
 def read_currency_data(path):
+    """Read the file containing data about currencies, store it in a DataFrame
+    
+    :param path: The path to the .csv file containing currencies info
+    :type path: string
+    :return: the Dataframe containing infos about the currencies
+    :rtype: Pandas.Dataframe
+    """
     df = pd.read_csv(path, sep=";")
     df.columns = ['currency','curr_to_dollar','symbol']
     df.set_index('currency', inplace = True)
