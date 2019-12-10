@@ -15,6 +15,8 @@ def get_adjusted_price(price, currency, currency_data):
     :return: price and name of the company
     :rtype: string, string
     """
-    price = price * currency_data.at[currency,'curr_to_dollar'] 
+    price = price * float(currency_data.at[currency,'curr_to_dollar'])
+    price = abs(price)
     symbol = currency_data.at[currency, 'symbol']
+    symbol = str(symbol)
     return price, symbol
