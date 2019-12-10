@@ -38,12 +38,12 @@ def parse_arguments(c):
     parser.add_argument("-v", help = "Be more verbose", action="store_true")
     parser.add_argument("symbol", 
                         help = "The ticker (or stock) symbol associated with stocks of a company")
-    parser.add_argument("-c", default = 'dollar', required = False, 
+    parser.add_argument("-c", default = 'dollar', required = True, 
                         help = "The currency in which the value is expressed",
                         choices = c)
     
     # check username and password
-    parser.add_argument('-a', help="add a usernamename (requires -p)",
+    parser.add_argument('-a', help="add a username name (requires -p)",
                         required = True)
     parser.add_argument('-p', help="the username password",
                         required = True)

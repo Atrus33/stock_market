@@ -1,13 +1,25 @@
 import sqlite3
 import random
 import hashlib
+
+
 def create_users_table(conn, cursor):
+    """Create the users' table if it does not exist
+    
+    :param conn: the connection handler
+    :type conn: Connection Object
+    :param cursor: the cursor
+    :type cursor: Cursor Handler
+    :return: no value
+    :rtype: none
+    """
     # Create table
     cursor.execute('''CREATE TABLE users
                    (username VARCHAR(255) NOT NULL,
                     password VARCHAR(255) NOT NULL,
                     salt SMALLINT NOT NULL,
                     PRIMARY KEY (username))''')
+
 
 def save_new_username(username, password):
     salt = random,randint(1, 10000)
@@ -19,6 +31,22 @@ def save_new_username(username, password):
     
 
 def check_for_username(conn, cursor, username, password):
+    """Check the credentials of a user
+        
+    The user provided his credentials for authentication. If the user exists
+    in the db, the SHA256(salt+password) is computed. If the digest of the 
+    password provided by the user is the same as the digest computed as above,
+    the user is authenticated and the action is allowed.
+    
+    :param conn: the connection handler
+    :type conn: Connection Object
+    :param cursor: the cursor
+    :type cursor: Cursor Handler
+    :param username: the username provided by the user for the authentication
+    :param password: the password provided by the user for the authentication
+    :return: True if the user can be authenticated, False otherwise.
+    :rtype: Boolean
+    """
     rows = cursor.execute("SELECT * FROM users WHERE username=?",
                           (username,))
     conn.commit()
