@@ -14,14 +14,12 @@ class TestMain(unittest.TestCase):
         f.close()
 
     def test_no_datafile(self):
-        u, r = read_currency_data(path="/tmp/nonexistentfile-wewefwwe")
-        self.assertFalse(u)
-        self.assertFalse(r)
+        df = read_currency_data(path="/tmp/nonexistentfile-wewefwwe")
+        self.assertFalse(df)
 
     def test_empty_datafie(self):
-        u, r = read_currency_data(path=self.temporary_file)
-        self.assertFalse(u)
-        self.assertFalse(r)
+        df = read_currency_data(path=self.temporary_file)
+        self.assertFalse(df)
 
     def tearDown(self):
         os.remove(self.temporary_file)
