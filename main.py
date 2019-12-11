@@ -7,26 +7,6 @@ from python_package.scripts import dbmanager
 
 default_datafile = 'data/allowed_currencies.csv'
 companies_file = 'data/allowed_companies.csv'
-default_database = 'data/database.db'
-
-conn = None
-cursor = None
-
-def open_and_create():
-    """Connect to the database
-    
-    :return: no value
-    :rtype: none
-    """
-    global conn
-    global cursor
-    conn = sqlite3.connect(default_database)
-    cursor = conn.cursor()
-    try:
-        cursor.execute("SELECT * FROM users")  
-    except sqlite3.OperationalError:
-        dbmanager.create_users_table(conn, cursor)
-   
         
     
 def read_currency_data(path):
