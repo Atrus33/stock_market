@@ -3,12 +3,11 @@ import random
 import hashlib
 import argparse
 import os
-db_path = os.path.abspath(os.path.join(os.getcwd(), '../../data/database.db'))
 
 conn = None
 cursor = None
 
-def open_and_create():
+def open_and_create(db_path):
     """Connect to the database
     
     :return: no value
@@ -127,7 +126,8 @@ def parse_arguments():
 
     
 if __name__ == "__main__":
-    open_and_create()
+    path = os.path.abspath(os.path.join(os.getcwd(), '../data/database.db'))
+    open_and_create(path)
     args = parse_arguments()
     if args.add and args.rm:
         print("You cannot add and remove a user at the same time!")
