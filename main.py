@@ -49,6 +49,13 @@ def read_currency_data(path):
     return df
 
 def read_available_companies(path):
+    """Read the file containing data about companies, store it in a DataFrame
+    
+    :param path: The path to the .csv file containing companies info
+    :type path: string
+    :return: the Dataframe containing infos about the companies
+    :rtype: Pandas.Dataframe
+    """
     if path.split('.')[-1] != 'csv':
         return False
     df = pd.DataFrame
