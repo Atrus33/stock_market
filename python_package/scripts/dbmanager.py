@@ -21,11 +21,24 @@ def create_users_table(conn, cursor):
                     PRIMARY KEY (username))''')
 
 
-def save_new_username(username, password):
-    salt = random,randint(1, 10000)
+def save_new_username(conn, cursor, username, password):
+    """Save a new user in the database
+    
+    :param conn: the connection handler
+    :type conn: Connection Object
+    :param cursor: the cursor
+    :type cursor: Cursor Handler
+    :param username: the username
+    :type username: string
+    :param password: the password
+    :type password: string
+    :return: no value
+    :rtype: none
+    """
+    salt = random.randint(1, 10000)
     password = str(salt) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    cursor.execute("INSERT OR REPLACE INTO user VALUES (?,?,?)",
+    cursor.execute("INSERT OR REPLACE INTO users VALUES (?,?,?)",
                    (username, digest, salt))
     conn.commit()
     
@@ -57,3 +70,6 @@ def check_for_username(conn, cursor, username, password):
         return True
     else:
         return False
+    
+if __name__ == "__main__":
+    pass
