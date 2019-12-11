@@ -1,7 +1,7 @@
 import sqlite3
 import random
 import hashlib
-
+import argparse
 
 def create_users_table(conn, cursor):
     """Create the users' table if it does not exist
@@ -42,7 +42,7 @@ def save_new_username(conn, cursor, username, password):
                    (username, digest, salt))
     conn.commit()
     
-
+    
 def check_for_username(conn, cursor, username, password):
     """Check the credentials of a user
         
@@ -71,5 +71,32 @@ def check_for_username(conn, cursor, username, password):
     else:
         return False
     
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+            description = "Manage possible database actions (add/remove user)",
+            prog = "stock_info",
+            usage = "%(prog)s [options]",
+            epilog = "Using SQLite3")
+    
+    parser.add_argument("-add", required = False,
+                        help = "Add username '-u' with password '-p' (Bool)",
+                        action = "store_true") 
+    parser.add_argument("-rm", required = False, 
+                        help= "Remove username '-u' with password '-p' (Bool)",
+                        action = "store_true")
+    
+    parser.add_argument('-u', help="add a username name (requires -p)",
+                        required = True)
+    parser.add_argument('-p', help = "the username password",
+                        required = False)
+    
+    parser.add_argument("--version",
+                        action = "version",
+                        version = "%(prog)s 1.0")
+    args = parser.parse_args()
+    return args
+
+    
 if __name__ == "__main__":
-    pass
+    args = parse_arguments()
+    print(args)
