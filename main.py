@@ -1,49 +1,12 @@
 import argparse
-import pandas as pd
-import sqlite3
 from stock_package.scripts import stock
 from stock_package.scripts import currency_handler as ch
 from stock_package.scripts import dbmanager as db
+from stock_package.scripts import csv_reader as reader
 
 default_datafile = 'stock_package/data/allowed_currencies.csv'
 companies_file = 'stock_package/data/allowed_companies.csv'
 db_path = 'stock_package/data/database.db'
-    
-def read_currency_data(path):
-    """Read the file containing data about currencies, store it in a DataFrame
-    
-    :param path: The path to the .csv file containing currencies info
-    :type path: string
-    :return: the Dataframe containing infos about the currencies
-    :rtype: Pandas.Dataframe
-    """
-    if path.split('.')[-1] != 'csv':
-        return False
-    df = pd.DataFrame()
-    try:
-        df = pd.read_csv(path, sep=";")
-        df.columns = ['currency','curr_to_dollar','symbol']
-        df.set_index('currency', inplace = True)
-    except :
-        return False
-    return df
-
-def read_available_companies(path):
-    """Read the file containing data about companies, store it in a DataFrame
-    
-    :param path: The path to the .csv file containing companies info
-    :type path: string
-    :return: the Dataframe containing infos about the companies
-    :rtype: Pandas.Dataframe
-    """
-    if path.split('.')[-1] != 'csv':
-        return False
-    df = pd.DataFrame
-    try:
-        df = pd.read_csv(path, sep=";")
-    except:
-        return False
-    return set(list(df['ticker']))
 
 def parse_arguments(currencies, companies):
     parser = argparse.ArgumentParser(
@@ -74,9 +37,9 @@ def parse_arguments(currencies, companies):
 
 if __name__ == "__main__":
     db.open_and_create(db_path)
-    currency_data = read_currency_data(path = default_datafile)
+    currency_data = reader.read_currency_data(path = default_datafile)
     currencies_allowed = currency_data.index.tolist()
-    companies_allowed = read_available_companies(companies_file)
+    companies_allowed = reader.read_available_companies(companies_file)
     args = parse_arguments(currencies_allowed, companies_allowed)
     curr_chosen = args.c
     if db.check_for_username(args.u, args.p):
