@@ -126,7 +126,8 @@ def parse_arguments():
 
     
 if __name__ == "__main__":
-    path = os.path.abspath(os.path.join(os.getcwd(), '../data/database.db'))
+    path = os.path.abspath(os.path.join(os.getcwd(),
+                                        'stock_package/data/database.db'))
     open_and_create(path)
     args = parse_arguments()
     if args.add and args.rm:

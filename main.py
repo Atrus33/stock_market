@@ -1,7 +1,7 @@
 import argparse
+import dbmanager as db
 from stock_package.scripts import stock
 from stock_package.scripts import currency_handler as ch
-from stock_package.scripts import dbmanager as db
 from stock_package.scripts import csv_reader as reader
 
 default_datafile = 'stock_package/data/allowed_currencies.csv'
