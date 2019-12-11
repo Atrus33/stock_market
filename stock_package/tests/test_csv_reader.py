@@ -1,15 +1,15 @@
 import unittest
 import sys
+import os
+import tempfile
 sys.path.append('../scripts')
 from csv_reader import read_currency_data
-import os
 
 
 class TestMain(unittest.TestCase):
 
     def setUp(self):
-        # note: this would be better done with tempfile
-        self.temporary_file = "/tmp/emptyfile"
+        self.temporary_file = tempfile.TemporaryFile()
         f = open(self.temporary_file, 'w')
         f.close()
 
