@@ -5,7 +5,7 @@ sys.path.append('../scripts')
 from csv_reader import read_currency_data
 
 
-class TestMain(unittest.TestCase):
+class TestCSVReader(unittest.TestCase):
 
     def setUp(self):
         self.temporary_file = '/tmp/temporary_file'
