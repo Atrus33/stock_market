@@ -1,13 +1,13 @@
 import argparse
 import pandas as pd
 import sqlite3
-from python_package import stock
-from python_package import currency_handler as ch
-from python_package.scripts import dbmanager
+from stock_package.scripts import stock
+from stock_package.scripts import currency_handler as ch
+from stock_package.scripts import dbmanager as db
 
-default_datafile = 'data/allowed_currencies.csv'
-companies_file = 'data/allowed_companies.csv'
-        
+default_datafile = 'stock_package/data/allowed_currencies.csv'
+companies_file = 'stock_package/data/allowed_companies.csv'
+db_path = 'stock_package/data/database.db'
     
 def read_currency_data(path):
     """Read the file containing data about currencies, store it in a DataFrame
@@ -60,7 +60,7 @@ def parse_arguments(currencies, companies):
                         choices = currencies)
     
     # check username and password
-    parser.add_argument('-a', help="add a username name (requires -p)",
+    parser.add_argument('-u', help="add a username name (requires -p)",
                         required = True)
     parser.add_argument('-p', help="the username password",
                         required = True)
@@ -73,13 +73,13 @@ def parse_arguments(currencies, companies):
 
 
 if __name__ == "__main__":
-    open_and_create()
+    db.open_and_create(db_path)
     currency_data = read_currency_data(path = default_datafile)
     currencies_allowed = currency_data.index.tolist()
     companies_allowed = read_available_companies(companies_file)
     args = parse_arguments(currencies_allowed, companies_allowed)
     curr_chosen = args.c
-    if dbmanager.check_for_username(conn, cursor, args.a, args.p):
+    if db.check_for_username(args.u, args.p):
         price, name = stock.get_price(args.symbol, args.v)
         price, c_symbol = ch.get_adjusted_price(price,
                                                 curr_chosen,
