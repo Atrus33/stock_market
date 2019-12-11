@@ -6,6 +6,7 @@ from python_package import currency_handler as ch
 from python_package.scripts import dbmanager
 
 default_datafile = 'data/allowed_currencies.csv'
+companies_file = 'data/allowed_companies.csv'
 default_database = 'data/database.db'
 
 conn = None
@@ -47,20 +48,29 @@ def read_currency_data(path):
         return False
     return df
 
+def read_available_companies(path):
+    if path.split('.')[-1] != 'csv':
+        return False
+    df = pd.DataFrame
+    try:
+        df = pd.read_csv(path, sep=";")
+    except:
+        return False
+    return set(list(df['ticker']))
 
-def parse_arguments(c):
+def parse_arguments(currencies, companies):
     parser = argparse.ArgumentParser(
             description = "Process ticker symbol and currency",
             prog = "stock_info",
             usage = "%(prog)s [options]",
             epilog = "Using financialmodelingprep API")
     parser.add_argument("-v", help = "Be more verbose", action="store_true")
-    parser.add_argument("symbol", 
+    parser.add_argument("symbol", choices = companies,
                         help ='''The ticker (or stock) symbol
                         associated with stocks of a company''')
-    parser.add_argument("-c", default = 'dollar', required = True, 
+    parser.add_argument("-c", default = 'dollar', required = False, 
                         help = "The currency in which the value is expressed",
-                        choices = c)
+                        choices = currencies)
     
     # check username and password
     parser.add_argument('-a', help="add a username name (requires -p)",
@@ -79,7 +89,8 @@ if __name__ == "__main__":
     open_and_create()
     currency_data = read_currency_data(path = default_datafile)
     currencies_allowed = currency_data.index.tolist()
-    args = parse_arguments(currencies_allowed)
+    companies_allowed = read_available_companies(companies_file)
+    args = parse_arguments(currencies_allowed, companies_allowed)
     curr_chosen = args.c
     if dbmanager.check_for_username(conn, cursor, args.a, args.p):
         price, name = stock.get_price(args.symbol, args.v)
