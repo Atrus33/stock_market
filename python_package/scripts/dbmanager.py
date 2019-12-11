@@ -41,7 +41,7 @@ def create_users_table():
 
 
 def save_new_username(username, password):
-    """Save a new user in the database
+    """Save a new user in the users table
     
     :param username: the username
     :type username: string
@@ -60,6 +60,18 @@ def save_new_username(username, password):
                    (username, digest, salt))
     conn.commit()
     
+def remove_username(username):
+    """Remove a user from the users table
+    
+    :param username: the username
+    :type username: string
+    :return: no value
+    :rtype: none
+    """
+    global conn
+    global cursor
+    cursor.execute("DELETE FROM users WHERE username = ?", (username,))
+    conn.commit()
     
 def check_for_username(username, password):
     """Check the credentials of a user
@@ -125,5 +137,10 @@ if __name__ == "__main__":
         else:
             save_new_username(args.u, args.p)
             print("Successfully inserted user {}".format(args.u))
+    elif args.rm:
+        remove_username(args.u)
+        print("Successfully removed user {}".format(args.u))
+    else:
+        print("Please choose -add to add a user or -rm to remove a user!")
             
     #print(args)
