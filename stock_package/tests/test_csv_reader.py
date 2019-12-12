@@ -1,8 +1,6 @@
 import unittest
-import sys
 import os
-sys.path.append('../scripts')
-from csv_reader import read_currency_data
+from stock_package.scripts.csv_reader import read_currency_data
 
 
 class TestCSVReader(unittest.TestCase):

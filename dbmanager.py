@@ -7,9 +7,10 @@ import os
 conn = None
 cursor = None
 
+
 def open_and_create(db_path):
     """Connect to the database
-    
+
     :return: no value
     :rtype: none
     """
@@ -18,18 +19,19 @@ def open_and_create(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM users") 
-     # if the table does not exist create one
+        cursor.execute("SELECT * FROM users")
+    # if the table does not exist create one
     except sqlite3.OperationalError:
         create_users_table(conn, cursor)
-   
+
+
 def create_users_table():
     """Create the users' table if it does not exist
-    
+
     :return: no value
     :rtype: none
     """
-       
+
     global conn
     global cursor
     # Create table
@@ -39,9 +41,10 @@ def create_users_table():
                     salt SMALLINT NOT NULL,
                     PRIMARY KEY (username))''')
 
+
 def save_new_username(username, password):
     """Save a new user in the users table
-    
+
     :param username: the username
     :type username: string
     :param password: the password
@@ -49,20 +52,21 @@ def save_new_username(username, password):
     :return: no value
     :rtype: none
     """
-    
+
     global conn
     global cursor
     salt = random.randint(1, 10000)
     password = str(salt) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
-     # if the user already exists, replace its password and salt
+    # if the user already exists, replace its password and salt
     cursor.execute("INSERT OR REPLACE INTO users VALUES (?,?,?)",
                    (username, digest, salt))
     conn.commit()
-    
+
+
 def remove_username(username):
     """Remove a user from the users table
-    
+
     :param username: the username
     :type username: string
     :return: no value
@@ -70,76 +74,78 @@ def remove_username(username):
     """
     global conn
     global cursor
-     # the username is the primary key
+    # the username is the primary key
     cursor.execute("DELETE FROM users WHERE username = ?", (username,))
     conn.commit()
-    
+
+
 def check_for_username(username, password):
     """Check the credentials of a user
-        
+
     The user provided his credentials for authentication. If the user exists
-    in the db, the SHA256(salt+password) is computed. If the digest of the 
+    in the db, the SHA256(salt+password) is computed. If the digest of the
     password provided by the user is the same as the digest computed as above,
     the user is authenticated and the action is allowed.
-    
+
     :param username: the username provided by the user for the authentication
     :param password: the password provided by the user for the authentication
     :return: True if the user can be authenticated, False otherwise.
     :rtype: Boolean
     """
-    
+
     global conn
     global cursor
     rows = cursor.execute("SELECT * FROM users WHERE username=?",
                           (username,))
     conn.commit()
     results = rows.fetchall()
-     # get the salt and prepend to the password before computing the digest
+    # get the salt and prepend to the password before computing the digest
     password = str(results[0][2]) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
-     # if the digest in the database is equal to the computed digest ALLOW
+    # if the digest in the database is equal to the computed digest ALLOW
     if digest == results[0][1].lower():
         return True
     else:
         return False
-    
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
-            description = "Manage possible database actions (add/remove user)",
-            prog = "stock_info",
-            usage = "%(prog)s [options]",
-            epilog = "Using SQLite3")
-     # command to add users
-    parser.add_argument("-add", required = False, default = False,
-                        help = "Add username '-u' with password '-p' (Bool)",
-                        action = "store_true")
-     # command to remove users
-    parser.add_argument("-rm", required = False, default = False,
-                        help= "Remove username '-u' with password '-p' (Bool)",
-                        action = "store_true")
-     # user credentials
+            description="Manage possible database actions (add/remove user)",
+            prog="stock_info",
+            usage="%(prog)s [options]",
+            epilog="Using SQLite3")
+    # command to add users
+    parser.add_argument("-add", required=False, default=False,
+                        help="Add username '-u' with password '-p' (Bool)",
+                        action="store_true")
+    # command to remove users
+    parser.add_argument("-rm", required=False, default=False,
+                        help="Remove username '-u' with password '-p' (Bool)",
+                        action="store_true")
+    # user credentials
     parser.add_argument('-u', help="add a username name (requires -p)",
-                        required = True, default = None)
-    parser.add_argument('-p', help = "the username password",
-                        required = False, default = None)
-    
+                        required=True, default=None)
+    parser.add_argument('-p', help="the username password",
+                        required=False, default=None)
+
     parser.add_argument("--version",
-                        action = "version",
-                        version = "%(prog)s 1.0")
+                        action="version",
+                        version="%(prog)s 1.0")
     args = parser.parse_args()
     return args
 
-     # the script is run from the command line to populate the users table
+
 if __name__ == "__main__":
     path = os.path.abspath(os.path.join(os.getcwd(),
                                         'stock_package/data/database.db'))
     open_and_create(path)
     args = parse_arguments()
-     # if the users wants to add and remove a user at the same time DENY
+    # if the users wants to add and remove a user at the same time DENY
     if args.add and args.rm:
         print("You cannot add and remove a user at the same time!")
     elif args.add:
-         # if there is one argument missing (username, password or both) DENY
+        # if there is one argument missing (username, password or both) DENY
         if args.u is None or args.p is None:
             print("Please provide a proper username and password combination!")
         else:
@@ -150,4 +156,3 @@ if __name__ == "__main__":
         print("Successfully removed user {}".format(args.u))
     else:
         print("Please choose -add to add a user or -rm to remove a user!")
-            
