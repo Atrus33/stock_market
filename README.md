@@ -18,7 +18,11 @@ A user can choose, from a wide list, the **ticker** (company's stock symbol) to 
  
 > **Note:** More currencies and companies will be supported in the next release. :fire: 
 
-## Data Files
+## Documentation :notebook_with_decorative_cover:
+Documentation can be found in: ```docs/_build/html/index.html```
+Made with: [Sphinx](http://www.sphinx-doc.org/en/master/).
+
+## Data Files :open_file_folder:
 Tickers an currencies data are stored in *.csv* files located in: ```stock_package/data/```.  
 #### Supported tickers (version 1.0):   
 
