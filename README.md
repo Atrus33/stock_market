@@ -100,10 +100,10 @@ Successfully removed user francesco_totti
 ## Testing
 Tests on parts of the code are provided here: ```stock_package/tests/``` .  
 You can find 2 modules: ```test_csv_reader.py``` and ```test_currency_handler.py```.  
-To run them go in **stock_package/tests/** and use:```python -m unittest -v -b test_MODULENAME.py```:
+To run them **from the main folder** use:```python3 -m unittest -v -b stock_package/tests/test_MODULENAME.py```:
 
 ```
-$ python -m unittest -v -b test_csv_reader.py
+python3 -m unittest -v -b stock_package/tests/test_csv_reader.py
 test_empty_datafie (test_csv_reader.TestCSVReader) ... ok
 test_file_is_not_csv (test_csv_reader.TestCSVReader) ... ok
 test_no_datafile (test_csv_reader.TestCSVReader) ... ok
