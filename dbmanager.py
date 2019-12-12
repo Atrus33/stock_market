@@ -18,7 +18,8 @@ def open_and_create(db_path):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM users")  
+        cursor.execute("SELECT * FROM users") 
+     # if the table does not exist create one
     except sqlite3.OperationalError:
         create_users_table(conn, cursor)
    
@@ -38,7 +39,6 @@ def create_users_table():
                     salt SMALLINT NOT NULL,
                     PRIMARY KEY (username))''')
 
-
 def save_new_username(username, password):
     """Save a new user in the users table
     
@@ -55,6 +55,7 @@ def save_new_username(username, password):
     salt = random.randint(1, 10000)
     password = str(salt) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
+     # if the user already exists, replace its password and salt
     cursor.execute("INSERT OR REPLACE INTO users VALUES (?,?,?)",
                    (username, digest, salt))
     conn.commit()
@@ -69,6 +70,7 @@ def remove_username(username):
     """
     global conn
     global cursor
+     # the username is the primary key
     cursor.execute("DELETE FROM users WHERE username = ?", (username,))
     conn.commit()
     
@@ -92,8 +94,10 @@ def check_for_username(username, password):
                           (username,))
     conn.commit()
     results = rows.fetchall()
+     # get the salt and prepend to the password before computing the digest
     password = str(results[0][2]) + password
     digest = hashlib.sha256(password.encode('utf-8')).hexdigest()
+     # if the digest in the database is equal to the computed digest ALLOW
     if digest == results[0][1].lower():
         return True
     else:
@@ -105,14 +109,15 @@ def parse_arguments():
             prog = "stock_info",
             usage = "%(prog)s [options]",
             epilog = "Using SQLite3")
-    
+     # command to add users
     parser.add_argument("-add", required = False, default = False,
                         help = "Add username '-u' with password '-p' (Bool)",
-                        action = "store_true") 
+                        action = "store_true")
+     # command to remove users
     parser.add_argument("-rm", required = False, default = False,
                         help= "Remove username '-u' with password '-p' (Bool)",
                         action = "store_true")
-    
+     # user credentials
     parser.add_argument('-u', help="add a username name (requires -p)",
                         required = True, default = None)
     parser.add_argument('-p', help = "the username password",
@@ -124,15 +129,17 @@ def parse_arguments():
     args = parser.parse_args()
     return args
 
-    
+     # the script is run from the command line to populate the users table
 if __name__ == "__main__":
     path = os.path.abspath(os.path.join(os.getcwd(),
                                         'stock_package/data/database.db'))
     open_and_create(path)
     args = parse_arguments()
+     # if the users wants to add and remove a user at the same time DENY
     if args.add and args.rm:
         print("You cannot add and remove a user at the same time!")
     elif args.add:
+         # if there is one argument missing (username, password or both) DENY
         if args.u is None or args.p is None:
             print("Please provide a proper username and password combination!")
         else:
@@ -144,4 +151,3 @@ if __name__ == "__main__":
     else:
         print("Please choose -add to add a user or -rm to remove a user!")
             
-    #print(args)
