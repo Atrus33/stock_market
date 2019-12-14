@@ -1,8 +1,9 @@
 # Check the stock price! :moneybag: 
 
-In this repository you can find a file named ```main.py``` that queries the FMP on-line service to receive the stock value of well-known companies in U.S. Dollars. 
+In this repository you can find a file named ```main.py``` that queries the FMP on-line service to receive the stock value of well-known companies in U.S. Dollars (but wait :warning: ... it's way more than this!).  
+Some [parameters](#Command-line-parameters) are required to run the program but do not worry, everything is explained below!
 
-If you run the program, executing the main file with: ```python main.py AAPL -u test -p test``` it will  give you results similar to the following: 
+If you run the program, executing the main file with: ```$ python main.py AAPL -u test -p test``` it will  give you results similar to the following: 
 
 ```
 $ python main.py AAPL -u test -p test
@@ -10,20 +11,26 @@ Apple Inc. (Symbol: AAPL) has a stock value of 270.27 $.
 ```
 > **Note:** the project requires the following modules to run: *argparse, sqlite3, random, hashlib, os, pandas, requests, json, unittest* and *sys*.
 
-A user can choose, from a wide list, the **ticker** (company's stock symbol) to analyse and the **currency** to express the stock price.  
-**Authentication is required.**
+A user can choose, from a wide list, the **ticker** (company's stock symbol, **AAPL** in the example above) to analyse and the **currency** to express the stock price.  
+**Authentication is required when runnnig the main file.**
 
-[FMP](https://financialmodelingprep.com/) is an on-line resource that provides stock data. The APIs are documented in a [API documentation page](https://financialmodelingprep.com/developer/docs/).
+[FMP](https://financialmodelingprep.com/) is an on-line resource that provides company valuation, **stock time series** (that we are using!) and stock market major indexes. The APIs are documented in a [API documentation page](https://financialmodelingprep.com/developer/docs/).
 
  
 > **Note:** More currencies and companies will be supported in the next release. :fire: 
 
 ## Documentation :notebook_with_decorative_cover:
-Documentation can be found in: ```docs/_build/html/index.html```
-Made with: [Sphinx](http://www.sphinx-doc.org/en/master/).
+Documentation can be found in: ```docs/_build/html/index.html``` and provides infos about the functions you can find in the various modules. Have a glimpse :eyeglasses:
+ 
+To read them with your **default browser**, from the main folder use ```$ open docs/_build/html/index.html``` or, for other browsers you may have installed, follow these examples:
+- **Chrome:** ```$ open -a "Google Chrome" docs/_build/html/index.html```
+- **Safari:** ```$ open -a "Safari" docs/_build/html/index.html```
+
+
+**DOCUMENTATION MADE WITH: [Sphinx](http://www.sphinx-doc.org/en/master/).**
 
 ## Data Files :open_file_folder:
-Tickers an currencies data are stored in *.csv* files located in: ```stock_package/data/```.  
+Tickers and currencies data are stored in *.csv* files located in: ```stock_package/data/```.  There are 19 supported companies and 12 supported currencies in this **first release.**
 #### Supported tickers (version 1.0):   
 
 Ticker | Company
@@ -64,27 +71,29 @@ kwacha | 14.63 | ZK
 riyal | 3.75 | SR
 ruble | 63.55 | P
 
-## Command line parameters
+## Command line parameters :computer:
+As we have mentioned in the first section, some command line parameters are required in order to run the main script.
 #### Positional arguments
-- **symbol**: The ticker (or stock) symbol associated with stocks of a company.
-> **Note:** You can access them (and add more! :heavy_plus_sign:) here: ```stock_package/data/allowed_companies.csv```.
+- **symbol**: The ticker (or stock) symbol associated with stocks of a company. **Only one** symbol can be passed.
+> **Note:** You can access tickers (and add more! :heavy_plus_sign:) here: ```stock_package/data/allowed_companies.csv```.
 
 . 
 #### Optional arguments
 - **-h, --help:** show this help message and exit.  
-- **-v:** Be more verbose.  
-- **-c [required]:** The *currency* in which the value is expressed (**default: dollar**).  
-   > **Note:** You can access them (and add more! :heavy_plus_sign:) here: ```stock_package/data/allowed_currencies.csv```.
-- **-u U [required]:** add a username name (requires *-p*).  
-- **-p P [required]:** the user password.   
+- **-v:** Be more verbose. Some modules also include verbosity. There is **one level** of verbosity in this first release.   
+- **-c:** The *currency* in which the value is expressed (**default: dollar**). If another currency is chosen, the **exchange rate** for that currency is applied.  
+   > **Note:** You can access currencies (and add more! :heavy_plus_sign:) here: ```stock_package/data/allowed_currencies.csv```.
+- **-u U [required]:** the username (requires *-p*).  
+- **-p P [required]:** the user's password.   
 - **--version:** show program's version number and exit.
 
-## How to populate the database
+## How to populate the database :busts_in_silhouette:
 In order to run ```main.py``` you will need a **username** and a **password**. The package comes with a **default user** with the following credenentials:
 - *username*: **test**
 - *password*: **test**
 
 You may want to remove or add new users. You can find a helper module ```dbmanager.py``` in the parent directory that allows you to populate the database.
+> **Note:** adding and removing a user at the same time will be **denied** and no actions will be performed on the database.
 
 #### Adding a new user
 Use the parameter ```-add```. Requires the following:
@@ -101,7 +110,7 @@ Use the parameter ```-rm```. Requires the following:
 $ python dbmanager.py -rm -u francesco_totti
 Successfully removed user francesco_totti
 ```
-## Testing
+## Testing :name_badge:
 Tests on parts of the code are provided here: ```stock_package/tests/``` .  
 You can find 2 modules: ```test_csv_reader.py``` and ```test_currency_handler.py```.  
 To run them **from the main folder** use:```python3 -m unittest -v -b stock_package/tests/test_MODULENAME.py```:
@@ -127,6 +136,8 @@ Thank you all for the collaboration! Follow the authors on linkedin!
 - [**Federico Contini**](https://www.linkedin.com/in/federico-contini-457660162)
 - [**Alexandru Catalin Duma**](https://www.linkedin.com/in/alexandru-duma/)
 - [**Margherita Menegazzi**](https://www.linkedin.com/in/margherita-menegazzi-153b88199/)
+
+Also thanks to [FMP](https://financialmodelingprep.com/) for the great service and comprehensive documentation!
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
